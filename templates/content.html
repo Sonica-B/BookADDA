@@ -87,7 +87,32 @@
 		<section class="cd-gallery">
 			<ul>
 				{% for b in booklist %}
+<<<<<<< HEAD
 				<li class="mix color-1 check1 radio2 option3"><a href="{{url_for('product_details',Book_id = b.Book_id)}}"><img src="/static/images/img/img-1.jpg" alt="Image 1"><center><h5>{{b.Book_name}}</h5></center></a></li>
+=======
+				<li class="mix color-1 check1 radio2 option3" style="background:#ffffffb8;margin:5.5px;max-height:600px;min-width:340px;">
+					<a href="{{url_for('product_details',Book_id = b.Book_id)}}">
+						<div><img src="/static/images/img/img-1.jpg"  style="min-height: 100px; max-height: 500px;" alt="Image 1"></div>
+						<div class="row flex" style=" margin:3%;color:black;font-size:80%;">
+							<div class="col-sm-9 text-nowrap" style="padding: 0;"><h4>{{b.Book_name}}</h4></div>
+							<div class="col-sm-3"><h5 style="padding-right: 0px;"><i class="fas fa-rupee-sign fa-md">&nbsp;{{b.Price}}</i></h5></div>
+						</div>
+						
+						<div class="row container text-muted"  style="text-align: center;padding: 5%;">
+						<div class="col-md-8 text-truncate">{{b.Description}}</div>
+						<div class="col-md-4 text-nowrap"> Read More </div>
+						</div>	
+					</a>
+						<div style="text-align: center;padding: 2%;">
+						<h6>User Ratings</h6>
+						<span class="fa fa-star checked" style="color: orange;"></span>
+						<span class="fa fa-star checked" style="color: orange;"></span>
+						<span class="fa fa-star checked" style="color: orange;"></span>
+						<span class="fa fa-star checked" style="color: orange;"></span>
+						<span class="fa fa-star"></span>
+						</div>
+					</li>
+>>>>>>> f68dce9 (UI changes of Contents page and Login Page done)
 				{% endfor %}
 			</ul>
 			<div class="cd-fail-message">No results found</div>
@@ -100,8 +125,8 @@
 					{% for editions in edition %}
 					<ul class="cd-filter-content cd-filters list" style="list-style-type: none ;">
 						<li>
-							<input name="books" value="{{editions.Edition}}" class="filter" data-filter=".check1" type="checkbox" id="checkbox1" checked>
-			    			<label class="checkbox-label" for="checkbox1">{{editions.Edition}}</label>
+							<input type="radio" value="{{editions.Edition}}" class="filter" data-filter=".check1" id="checkbox1">
+			    			<label class="radio-label" for="checkbox1">{{editions.Edition}}</label>
 						</li>
 					</ul>
 					{% endfor %}
@@ -111,8 +136,8 @@
 					{% for authors in author %}
 					<ul class="cd-filter-content cd-filters list" style="list-style-type: none ;">
 						<li>
-							<input class="filter" data-filter=".check4" type="checkbox" id="checkbox1">
-			    			<label class="checkbox-label" for="checkbox4">{{authors.Author}}</label>
+							<input class="filter" data-filter=".check2" type="radio" id="checkbox2">
+			    			<label class="checkbox-label" for="checkbox2">{{authors.Author}}</label>
 						</li>
 					</ul> 
 					{% endfor %}
@@ -122,13 +147,13 @@
 					{% for publishers in publisher %}
 					<ul class="cd-filter-content cd-filters list" style="list-style-type: none ;">
 						<li>
-							<input class="filter" data-filter=".check4" type="checkbox" id="checkbox1">
-			    			<label class="checkbox-label" for="checkbox4">{{publishers.Publisher}}</label>
+							<input class="filter" data-filter=".check3" type="radio" id="checkbox3">
+			    			<label class="checkbox-label" for="checkbox3">{{publishers.Publisher}}</label>
 						</li>
 					</ul> 
 					{% endfor %}
 				</div> 
-				<div class="cd-filter-block">
+				<!--<div class="cd-filter-block">
 					<h4>Select</h4>
 					
 					<div class="cd-filter-content">
@@ -141,9 +166,9 @@
 								<option value=".option4">Option 4</option>
 							</select>
 						</div> <!-- cd-select -->
-					</div> <!-- cd-filter-content -->
-				</div> <!-- cd-filter-block -->
-				<button type="submit">Apply!</button>
+					<!--</div>  cd-filter-content -->
+				<!--</div>  cd-filter-block -->
+				<button class="btn btn-outline-success btn-sm" type="submit">Apply!</button>
 			</form>
 
 			<a href="#0" class="cd-close"><i class="fa fa-times" aria-hidden="true"></i></a>

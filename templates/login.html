@@ -4,8 +4,6 @@
 <html>
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap(main).css">
 <link rel="stylesheet" type="text/css" href="/static/css/login.css">
-
-<head>
 	<title>Login</title>
 </head>
 
@@ -71,10 +69,11 @@
 			             <input type="email" name="email" class="form-control" id="exampleInputEmail1"  aria-describedby="emailHelp" placeholder="Enter your mail" required>
 			            <br> 
 			            <h6>Password</h6>
-			             <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
-				    <br>
+                  <input type="password" name="password" class="form-control" placeholder="Password" id="typepass" required><br>
+                  <input type="checkbox" onclick="Toggle()"> &nbsp;Show Password
+                  <br><br>
 			            <p>Forgot password ?<br><a id="A" href="#"> Click here!</a>
-				    </p><br>
+				          </p><br>
 
 			            <button type="submit" class="btn btn-outline-success btn-block" style =" border-radius:2rem;"><b>Login</b></button><br>
 
@@ -84,6 +83,19 @@
 				  </div>
 				</div>
     </div>
+  
+    <script>
+	function Toggle() {
+            var temp = document.getElementById("typepass");
+            if (temp.type === "password") {
+                temp.type = "text";
+            }
+            else {
+                temp.type = "password";
+            }
+        }
+    </script>
+    
     {% endblock %}
 
 <div class="area" >
