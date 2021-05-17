@@ -50,6 +50,17 @@ class RegisterForm(Form):
 		])
 	confirm = PasswordField('Confirm Password')
 
+#PRODUCT FORM
+class BookForm(Form):
+	title = StringField('Title',[validators.Length(min=1, max=100)])
+	author = StringField('Author',[validators.Length(min=1, max=100)])
+	publisher = StringField('Publisher',[validators.Length(min=1, max=100)])
+	sem = IntegerField('Semester',[validators.NumberRange(min=1, max=8)])
+	edition = IntegerField('Edition')
+	category = SelectField('Publisher',choices=[('PDF','PDF'),('Books','Books')])
+	price = FloatField('Price')
+	description = StringField('Description',[validators.Length(min=1,max=200)])
+
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -314,7 +325,7 @@ def product_details(Book_id):
 	return render_template('product_details.html')
 
 
-@app.route('/profile')
+@app.route('/profile',methods=['GET','POST'])
 @is_logged_in
 def profile():
 	if 'name' in session:
@@ -339,27 +350,8 @@ def profile():
 	
 	cur.close()
 
-	return render_template('profile.html',profile=profile,booksold=booksold,orders=orders)
-
-	
-
-#PRODUCT FORM
-class BookForm(Form):
-	title = StringField('Title',[validators.Length(min=1, max=100)])
-	author = StringField('Author',[validators.Length(min=1, max=100)])
-	publisher = StringField('Publisher',[validators.Length(min=1, max=100)])
-	sem = IntegerField('Semester',[validators.NumberRange(min=1, max=8)])
-	edition = IntegerField('Edition')
-	category = SelectField('Publisher',choices=[('PDF','PDF'),('Books','Books')])
-	price = FloatField('Price')
-	description = StringField('Description',[validators.Length(min=1,max=200)])
-
-
-@app.route('/product_form',methods=['GET','POST'])
-@is_logged_in
-def product_form():
 	form = BookForm(request.form)
-	if request.method == 'POST' and form.validate():
+	if request.method == 'POST' and request.form['submit_button'] == 'Sell':
 		title = request.form.get("title")
 		sem = request.form.get("semester")
 		author = request.form.get("author")
@@ -368,7 +360,7 @@ def product_form():
 		category = request.form.get("category")
 		price = request.form.get("price")
 		description = request.form.get("description")
-
+		
 		cur = mysql.connection.cursor()
 
 		#CHECK IF AUTHOR IS ALREADY PRESENT
@@ -412,7 +404,76 @@ def product_form():
 		e_id = data3.get("Edition_id")
 
 		#INSERTING RECORD IN BOOK TABLE
-		cur.execute("insert into book(Book_name,Book_sem,Category,Price,Description,S_id,Author_id,P_id,Edition_id) values(%s,%s,%s,%s,%s,%s,%s,%s)",(title,sem,category,price,description,s_id,a_id,p_id,e_id))
+		cur.execute("insert into book(Book_name,Book_sem,Category,Price,Description,S_id,Author_id,P_id,Edition_id) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(title,sem,category,price,description,s_id,a_id,p_id,e_id))
+		
+		#COMMIT AND CLOSE
+		mysql.connection.commit()
+		cur.close()
+		return redirect(url_for('profile'))
+
+	return render_template('profile.html',profile=profile,booksold=booksold,orders=orders,form=form)
+
+
+
+@app.route('/product_form',methods=['GET','POST'])
+@is_logged_in
+def product_form():
+	form = BookForm(request.form)
+	if request.method == 'POST':
+		print("DONE")
+		title = request.form.get("title")
+		sem = request.form.get("semester")
+		author = request.form.get("author")
+		publisher = request.form.get("publisher")
+		edition = request.form.get("edition")
+		category = request.form.get("category")
+		price = request.form.get("price")
+		description = request.form.get("description")
+		
+		cur = mysql.connection.cursor()
+
+		#CHECK IF AUTHOR IS ALREADY PRESENT
+		result1 = cur.execute("select * from author where Author = %s",[author])
+		if result1 > 0:
+			data1 = cur.fetchone()
+		else:
+			cur.execute("insert into author(Author) values(%s)",[author])
+
+		#CHECK IF PUBLISHER IS ALREADY PRESENT
+		result2 = cur.execute("select * from publisher where Publisher = %s",[publisher])
+		if result2 > 0:
+			data2 = cur.fetchone()
+		else:
+			cur.execute("insert into publisher(Publisher) values(%s)",[publisher])
+
+		#CHECK IF EDITION IS ALREADY PRESENT
+		result3 = cur.execute("select * from edition where Edition = %s",[edition])
+		if result3 > 0:
+			data3 = cur.fetchone()
+		else:
+			cur.execute("insert into edition(Edition) values(%s)",[edition])
+
+		#GETTING ID FOR EACH TABLES
+		if 'name' in session:
+			name = session['name']
+		result = cur.execute("select * from buyer where B_name = %s",[name])
+		profile = cur.fetchone()
+		s_id = profile.get("B_id") 
+
+		result1 = cur.execute("select * from author where Author = %s",[author])
+		data1 = cur.fetchone()
+		a_id = data1.get("Author_id")
+
+		result2 = cur.execute("select * from publisher where Publisher = %s",[publisher])
+		data2 = cur.fetchone()
+		p_id = data2.get("P_id")
+
+		result3 = cur.execute("select * from edition where Edition = %s",[edition])
+		data3 = cur.fetchone()
+		e_id = data3.get("Edition_id")
+
+		#INSERTING RECORD IN BOOK TABLE
+		cur.execute("insert into book(Book_name,Book_sem,Category,Price,Description,S_id,Author_id,P_id,Edition_id) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(title,sem,category,price,description,s_id,a_id,p_id,e_id))
 		
 		#COMMIT AND CLOSE
 		mysql.connection.commit()
