@@ -13,7 +13,7 @@ app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'BookADDA' 
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-# init MySQL
+# initialize MySQL
 mysql = MySQL(app)
 
 now = datetime.now()
